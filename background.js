@@ -7,26 +7,6 @@ function checkPasswordStrength(password) {
   return "Very Strong";
 }
 
-// Automatically check saved passwords
-async function checkSavedPasswords() {
-  try {
-    const passwords = await chrome.passwordsPrivate.getSavedPasswordList(); // Modern API
-    passwords.forEach((entry) => {
-      const strength = checkPasswordStrength(entry.password);
-      if (strength === "Weak") {
-        chrome.notifications.create({
-          type: "basic",
-          iconUrl: "icons/icon48.png",
-          title: "Weak Password Detected",
-          message: `A weak password is saved for ${entry.url}. Consider updating it.`,
-        });
-      }
-    });
-  } catch (error) {
-    console.error("Error checking saved passwords:", error.message);
-  }
-}
-
 // Fetch the latest unsafe site list dynamically
 async function updateUnsafeSites() {
   const unsafeSitesUrl =
@@ -52,14 +32,25 @@ function handleUnsafeNavigation(details) {
   });
 }
 
+// Handle incoming messages
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "updateUnsafeSites") {
+    updateUnsafeSites().then(() => {
+      sendResponse({ success: true });
+    }).catch((error) => {
+      console.error(error);
+      sendResponse({ success: false, error: error.message });
+    });
+    return true;  // To keep the messaging channel open
+  }
+});
+
 // Schedule periodic tasks using alarms
 chrome.alarms.create("updateUnsafeSites", { periodInMinutes: 60 });
-chrome.alarms.create("checkSavedPasswords", { periodInMinutes: 1440 }); // Daily
 
 // Handle alarms
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "updateUnsafeSites") updateUnsafeSites();
-  if (alarm.name === "checkSavedPasswords") checkSavedPasswords();
 });
 
 // Monitor navigation for unsafe links
@@ -68,9 +59,7 @@ chrome.webNavigation.onCommitted.addListener(handleUnsafeNavigation);
 // Initialize tasks on installation or startup
 chrome.runtime.onInstalled.addListener(() => {
   updateUnsafeSites();
-  checkSavedPasswords();
 });
 chrome.runtime.onStartup.addListener(() => {
   updateUnsafeSites();
-  checkSavedPasswords();
 });
