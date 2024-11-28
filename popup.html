@@ -1,17 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberShield</title>
-  <link rel="stylesheet" href="popup.css">
+  <title>Cyber Shield</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-  <h1>CyberShield</h1>
-  <p>Status: <span class="status">Active</span></p>
-  <h2>Manual Actions</h2>
-  <button id="manualScanPasswords">Scan Saved Passwords</button>
-  <button id="manualUpdateSites">Update Unsafe Site List</button>
+  <h2>Cyber Shield</h2>
+  <p>Protecting your browsing experience.</p>
+  <button id="updateButton">Update Unsafe Sites</button>
   <script src="popup.js"></script>
 </body>
 </html>
