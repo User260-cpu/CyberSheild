@@ -31,7 +31,7 @@ function checkSavedPasswords() {
 
 // Fetch the latest unsafe site list dynamically
 function updateUnsafeSites() {
-  const unsafeSitesUrl = "https://github.com/User260-cpu/Cyber-Sheild1/blob/main/unsafe-sites.https://raw.githubusercontent.com/User260-cpu/Cyber-Sheild1/refs/heads/main/unsafe-sites.json?token=GHSAT0AAAAAAC23NIHRTG3SVKF3W2H3TVWSZ2ILVEA"; // Replace with your URL
+  const unsafeSitesUrl = "https://raw.githubusercontent.com/User260-cpu/CyberSheild/refs/heads/main/unsafe-sites.json"; // Replace with your URL
   fetch(unsafeSitesUrl)
     .then((response) => response.json())
     .then((data) => {
