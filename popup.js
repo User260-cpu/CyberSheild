@@ -3,8 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
     chrome.runtime.sendMessage({ type: "updateUnsafeSites" }, (response) => {
       if (chrome.runtime.lastError) {
         console.error("Error:", chrome.runtime.lastError.message);
-      } else {
+      } else if (response.success) {
         alert("Unsafe sites updated successfully!");
+      } else {
+        alert("Failed to update unsafe sites: " + response.error);
       }
     });
   });
