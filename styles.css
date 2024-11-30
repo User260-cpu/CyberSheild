@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f8f9fa;
+    color: #333;
+  }
+  
+  .popup-container, .warning-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .btn-danger {
+    background: red;
+    color: white;
+  }
+  
+  .btn-safe {
+    background: green;
+    color: white;
+  }
+  

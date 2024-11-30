@@ -3,29 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unsafe Site Warning</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f44336;
-      color: white;
-      padding: 50px;
-    }
-    button {
-      background-color: white;
-      color: black;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-  </style>
+  <title>Warning</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Warning!</h1>
-  <p>You are trying to access an unsafe site. Your security is our priority.</p>
-  <button onclick="window.history.back()">Go Back</button>
+  <div class="warning-container">
+    <h1>Warning!</h1>
+    <p>This website has been flagged as unsafe. Proceed with caution.</p>
+    <button id="go-back" class="btn-danger">Go Back</button>
+    <button id="proceed" class="btn-safe">Proceed Anyway</button>
+  </div>
+  <script src="warning.js"></script>
 </body>
 </html>
