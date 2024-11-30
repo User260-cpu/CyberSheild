@@ -41,3 +41,4 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 // Fetch phishing data on installation/startup
 chrome.runtime.onInstalled.addListener(() => fetchOpenPhishData());
 chrome.runtime.onStartup.addListener(() => fetchOpenPhishData());
+ 

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CyberShield",
-  "version": "2.0",
+  "version": "1.0",
   "description": "An advanced cybersecurity extension with phishing detection and modern UI.",
   "permissions": [
     "storage",

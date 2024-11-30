@@ -7,3 +7,4 @@ document.getElementById("scan-now").addEventListener("click", () => {
 document.getElementById("settings").addEventListener("click", () => {
   alert("Settings functionality coming soon!");
 });
+ 
