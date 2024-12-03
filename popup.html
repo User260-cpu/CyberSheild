@@ -1,19 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberShield</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div class="popup-container">
-    <h1>CyberShield</h1>
-    <button id="scan-now">Scan Now</button>
-    <button id="settings">Settings</button>
-    <p id="status">Ready to protect you!</p>
-  </div>
-  <script src="popup.js"></script>
-</body>
+<html>
+  <head>
+    <title>CyberShield</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 10px;
+        width: 250px;
+      }
+      button {
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      #status {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>CyberShield</h3>
+    <button id="check">Check URL</button>
+    <div id="status">Waiting for action...</div>
+    
+    <script>
+      document.getElementById('check').addEventListener('click', () => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          const url = tabs[0].url;
+          chrome.runtime.sendMessage({ action: 'checkURL', url: url }, (response) => {
+            document.getElementById('status').innerText = response.message;
+          });
+        });
+      });
+    </script>
+  </body>
 </html>
- 

@@ -1,19 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Warning</title>
-  <link rel="stylesheet" href="styles.css">
+    <title>Warning: Suspicious Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: red;
+        }
+        p {
+            font-size: 18px;
+        }
+        .btn {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        .btn:hover {
+            background-color: darkred;
+        }
+        .proceed-btn {
+            background-color: green;
+        }
+        .proceed-btn:hover {
+            background-color: darkgreen;
+        }
+    </style>
 </head>
 <body>
-  <div class="warning-container">
-    <h1>Warning!</h1>
-    <p>This website has been flagged as unsafe. Proceed with caution.</p>
-    <button id="go-back" class="btn-danger">Go Back</button>
-    <button id="proceed" class="btn-safe">Proceed Anyway</button>
-  </div>
-  <script src="warning.js"></script>
+    <h1>Warning: This Website is Suspicious!</h1>
+    <p>The website you are attempting to visit has been flagged as unsafe or phishing.</p>
+    <p>It is recommended to avoid visiting this site.</p>
+    <button class="btn" onclick="window.history.back()">Go Back</button>
+    <button class="btn proceed-btn" onclick="proceedAnyway()">Proceed Anyway</button>
+
+    <script>
+        function proceedAnyway() {
+            // Close the warning page and allow the user to visit the malicious URL
+            chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                const url = tabs[0].url;  // Get the URL of the current tab
+                chrome.tabs.update(tabs[0].id, { url: url }); // Reload the tab
+            });
+        }
+    </script>
 </body>
 </html>
- 

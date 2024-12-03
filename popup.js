@@ -1,10 +1,7 @@
-document.getElementById("scan-now").addEventListener("click", () => {
-  chrome.storage.local.get("unsafeSites", (data) => {
-    alert(`Currently monitoring ${data.unsafeSites.length} phishing URLs.`);
-  });
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'checkURL') {
+    // Logic to check the URL using VirusTotal or other services
+    checkURLWithVirusTotal(request.url);
+    sendResponse({ message: 'Checking the URL for safety...' });
+  }
 });
-
-document.getElementById("settings").addEventListener("click", () => {
-  alert("Settings functionality coming soon!");
-});
- 

@@ -1,44 +1,71 @@
-// Function to fetch phishing URLs from OpenPhish
+// Server URL for your local Node.js server to handle VirusTotal requests
+const serverUrl = 'http://localhost:3000/check-url'; // Your local server URL
+
+// Function to check URL using VirusTotal
+function checkURLWithVirusTotal(url) {
+  fetch(`${serverUrl}?url=${encodeURIComponent(url)}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.data.attributes.last_analysis_stats.malicious > 0) {
+        alert(`The URL ${url} is flagged as malicious by VirusTotal.`);
+      }
+    })
+    .catch(error => console.error('Error checking VirusTotal:', error));
+}
+
+// Function to fetch phishing data from OpenPhish and check URLs
 function fetchOpenPhishData() {
-  const openPhishURL = "https://openphish.com/feed.txt";
-
-  fetch(openPhishURL)
-    .then((response) => {
-      if (!response.ok) throw new Error("Failed to fetch OpenPhish data.");
-      return response.text();
+  fetch("https://openphish.com/feed.txt")
+    .then(response => response.text())
+    .then(data => {
+      const phishUrls = data.split("\n");
+      phishUrls.forEach(url => checkURLWithVirusTotal(url));
     })
-    .then((data) => {
-      const phishingURLs = data.split("\n").filter((url) => url.trim() !== "");
-      chrome.storage.local.set({ unsafeSites: phishingURLs });
-      console.log("OpenPhish data updated.");
-    })
-    .catch((error) => {
-      console.error("Error fetching OpenPhish data:", error);
-    });
+    .catch(error => console.error("Error fetching OpenPhish data:", error));
 }
 
-// Redirect users from unsafe sites
-function checkIfUnsafeURL(details) {
-  chrome.storage.local.get("unsafeSites", (result) => {
-    const unsafeSites = result.unsafeSites || [];
-    if (unsafeSites.some((url) => details.url.includes(url))) {
-      chrome.tabs.update(details.tabId, { url: chrome.runtime.getURL("warning.html") });
-    }
-  });
-}
+// Automated URL checking using webNavigation
+chrome.webNavigation.onCommitted.addListener((details) => {
+  const url = details.url;
+  checkURLWithVirusTotal(url);
+});
 
-// Monitor navigation for unsafe links
-chrome.webNavigation.onCommitted.addListener(checkIfUnsafeURL);
-
-// Schedule periodic updates of OpenPhish data
-chrome.alarms.create("updateOpenPhish", { periodInMinutes: 60 });
+// Automatically check unsafe URLs from OpenPhish feed every hour
+chrome.alarms.create("checkOpenPhishData", { periodInMinutes: 60 });
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === "updateOpenPhish") {
+  if (alarm.name === "checkOpenPhishData") {
     fetchOpenPhishData();
   }
 });
 
-// Fetch phishing data on installation/startup
-chrome.runtime.onInstalled.addListener(() => fetchOpenPhishData());
-chrome.runtime.onStartup.addListener(() => fetchOpenPhishData());
- 
+// Function to check password strength
+function checkPasswordStrength(password) {
+  if (password.length < 8) return "Weak";
+  if (!/[A-Z]/.test(password)) return "Medium";
+  if (!/[0-9]/.test(password)) return "Medium";
+  if (!/[!@#$%^&*]/.test(password)) return "Strong";
+  return "Very Strong";
+}
+
+// Function to evaluate saved passwords
+function evaluateSavedPasswords() {
+  // Simulating retrieval of saved passwords from a password manager
+  const savedPasswords = [
+    { url: "https://example.com", password: "12345" },
+    { url: "https://secure-site.com", password: "Str0ngP@ss" },
+    { url: "https://bank.com", password: "Password123" }
+  ];
+
+  savedPasswords.forEach(entry => {
+    const strength = checkPasswordStrength(entry.password);
+    console.log(`Password strength for ${entry.url}: ${strength}`);
+  });
+}
+
+// Run password check periodically
+chrome.alarms.create("checkSavedPasswords", { periodInMinutes: 1440 }); // Daily check for saved passwords
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === "checkSavedPasswords") {
+    evaluateSavedPasswords();
+  }
+});
